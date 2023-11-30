@@ -1,0 +1,54 @@
+version: "3.3"
+services:
+  ##################
+  # Trino database #
+  test-db-hive-metastore:
+    image: postgres:15
+    restart: always
+    ports:
+      - 9956:5432
+    environment:
+      - POSTGRES_PASSWORD=hive
+      - POSTGRES_USER=hive
+      - POSTGRES_DB=hive_metastore
+
+  hive-metastore-app:
+    image: docker.io/andrebaceti/hive-metastore-pumpwood:0.2.10
+    container_name: hive-metastore-app
+    user: "hive:hive"
+    ports:
+      - 9083:9083
+      - 10000:10000
+      - 10002:10002
+    environment:
+      - GOOGLE_CLOUD_PROJECT=nice-google-project
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/secrets/key-storage.json
+    volumes:
+      - test-bucket-config:/etc/secrets/
+
+  trino-coordinator:
+    container_name: trino-coordinator
+    image: docker.io/andrebaceti/trino-coordinator:430-1.1
+    ports:
+      - '8050:8080'
+    volumes:
+      - ./catalog.zip:/catalog/catalog.zip
+      - test-bucket-config:/etc/secrets/
+    environment:
+      - GOOGLE_CLOUD_PROJECT=nice-google-project
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/secrets/key-storage.json
+
+  trino-worker:
+    image: docker.io/andrebaceti/trino-worker:430-1.1
+    volumes:
+      - ./catalog.zip:/catalog/catalog.zip
+      - test-bucket-config:/etc/secrets/
+    environment:
+      - GOOGLE_CLOUD_PROJECT=nice-google-project
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/secrets/key-storage.json
+    deploy:
+      replicas: 3
+
+volumes:
+  test-bucket-config:
+    external: true
