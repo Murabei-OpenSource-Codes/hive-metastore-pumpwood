@@ -93,4 +93,13 @@
       <value>com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS</value>
       <description>The AbstractFileSystem for 'gs:' URIs.</description>
     </property>
+
+    <!-- AWS S3 Storage -->
+    <property>
+      <name>fs.s3a.impl</name>
+      <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+      <description>The AbstractFileSystem for 's3a:' URIs.</description>
+    </property>
+
+
 </configuration>
