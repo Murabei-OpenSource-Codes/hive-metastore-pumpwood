@@ -98,8 +98,12 @@
     <property>
       <name>fs.s3a.impl</name>
       <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
-      <description>The AbstractFileSystem for 's3a:' URIs.</description>
+      <description>The implementation class of the S3A Filesystem</description>
     </property>
 
-
+    <property>
+      <name>fs.AbstractFileSystem.s3a.impl</name>
+      <value>org.apache.hadoop.fs.s3a.S3A</value>
+      <description>The implementation class of the S3A AbstractFileSystem.</description>
+    </property>
 </configuration>

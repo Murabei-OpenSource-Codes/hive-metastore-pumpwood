@@ -21,6 +21,7 @@ RUN apt-get install -y gettext-base curl postgresql-client
 
 ############################
 # Coping Java dependencies #
+RUN rm /opt/hive/lib/guava-19.0.jar
 USER hive
 COPY --chown=hive ./dependecies/. /opt/hive/lib/
 
